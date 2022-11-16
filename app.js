@@ -2,7 +2,7 @@ const express = require("express");
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-
+const Url = require("./models/url");
 const port = 3000;
 const app = express();
 
@@ -38,7 +38,20 @@ app.post("/", (req, res) => {
     shortenId += randomList[Math.floor(Math.random() * randomList.length)];
   }
   console.log(shortenId);
-  res.render("shorten", { url, shortenId });
+  Url.create({ urlID: shortenId, url: url }).then(() =>
+    res.render("shorten", { url, shortenId })
+  );
+});
+
+app.get("/shorten/:id", (req, res) => {
+  const id = req.params.id;
+  Url.find({ urlID: id })
+    .lean()
+    .then((url) => {
+      console.log(url[0].url);
+      res.redirect(url[0].url);
+    })
+    .catch((error) => console.log(error));
 });
 
 app.listen(port, () => {
