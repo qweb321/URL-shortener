@@ -1,23 +1,12 @@
 const express = require("express");
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const Url = require("./models/url");
 const shortenID = require("./modules/shortenID");
+
+require("./config/mongoose");
 const port = 3000;
 const app = express();
-
-require("dotenv").config();
-mongoose.connect(process.env.MONGODB_URL);
-
-const db = mongoose.connection;
-db.on("error", () => {
-  console.log("mongodb error!");
-});
-
-db.once("open", () => {
-  console.log("mongodb successfully!");
-});
 
 app.engine("hbs", exphbs.engine({ defaultLayout: "main", extname: "hbs" }));
 app.set("view engine", "hbs");
