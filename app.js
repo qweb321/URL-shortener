@@ -3,6 +3,7 @@ const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const Url = require("./models/url");
+const shortenID = require("./modules/shortenID");
 const port = 3000;
 const app = express();
 
@@ -27,29 +28,38 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  const url = req.body.url;
-  const lowerLetter = "abcdefghijklmnopqrstuvwxyz";
-  const upperLetter = lowerLetter.toUpperCase();
-  const numbers = "1234567890";
-  const randomList = lowerLetter.concat(upperLetter, numbers).split("");
-  // create five random numbers
-  let shortenId = "";
-  for (let i = 0; i < 5; i++) {
-    shortenId += randomList[Math.floor(Math.random() * randomList.length)];
-  }
-  console.log(shortenId);
-  Url.create({ urlID: shortenId, url: url }).then(() =>
-    res.render("shorten", { url, shortenId })
-  );
-});
-
-app.get("/shorten/:id", (req, res) => {
-  const id = req.params.id;
-  Url.find({ urlID: id })
+  let shortenId = shortenID();
+  //check shortenID exist or not
+  Url.findOne({ urlID: shortenId }).then((id) => {
+    if (id) {
+      console.log("exist");
+      console.log(shortenId);
+    } else {
+      console.log("not exist");
+      shortenId = shortenID();
+    }
+  });
+  // check url exist or not
+  Url.findOne({ url: req.body.url })
     .lean()
     .then((url) => {
-      console.log(url[0].url);
-      res.redirect(url[0].url);
+      if (!url) {
+        Url.insertMany({ urlID: shortenId, url: req.body.url }).then(() =>
+          res.render("shorten", { url, shortenId })
+        );
+      } else {
+        console.log(url);
+        res.render("shorten", { url, shortenId: url.urlID });
+      }
+    });
+});
+
+app.get("/urlshorten/:id", (req, res) => {
+  const id = req.params.id;
+  Url.findOne({ urlID: id })
+    .lean()
+    .then((url) => {
+      res.redirect(url.url);
     })
     .catch((error) => console.log(error));
 });
