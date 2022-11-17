@@ -1,14 +1,18 @@
-<h1>URL Shortener</h1>
-<h3>Success! Please use this link:</h3>
-<!-- The text field -->
-<a id="generatedURL" href="{{url.url}}">http://localhost:3000/{{shortenId}}</a>
-<!-- The button used to copy the text -->
-<button class="copy" onclick="copy()">Copy</button>
-
+<div class="container">
+  <h1>URL Shortener</h1>
+  <img src="{{image.src}}" alt="success icon" />
+  <h3>Success! Please use this link:</h3>
+  <!-- The text field -->
+  <a
+    id="generatedURL"
+    href="{{url.url}}"
+  >http://localhost:3000/{{shortenId}}</a>
+  <!-- The button used to copy the text -->
+  <button class="btn copy" onclick="copy()">Copy</button>
+</div>
 <script>
-  function copy() { 
-    const URL = document.getElementById("generatedURL")
-    navigator.clipboard.writeText(URL.innerText) 
-    .then(() => alert('copied'))
-    .catch(error => console.log(error)) }
+  function copy() { const URL = document.getElementById("generatedURL")
+  navigator.clipboard.writeText(URL.innerText) .then(() => //alert('copied')
+  Swal.fire( 'Copied!', 'Copied to clipboard!', 'success' )) .catch(error =>
+  console.log(error)) }
 </script>
