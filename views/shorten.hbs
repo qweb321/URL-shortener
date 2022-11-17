@@ -2,6 +2,9 @@
   <h1>URL Shortener</h1>
   <img src="{{image.src}}" alt="success icon" />
   <h3>Success! Please use this link:</h3>
+  <div class="qr-code">
+    <canvas id="canvas"></canvas>
+  </div>
   <!-- The text field -->
   <a
     id="generatedURL"
@@ -9,10 +12,18 @@
   >http://localhost:3000/{{shortenId}}</a>
   <!-- The button used to copy the text -->
   <button class="btn copy" onclick="copy()">Copy</button>
+  
 </div>
 <script>
   function copy() { const URL = document.getElementById("generatedURL")
   navigator.clipboard.writeText(URL.innerText) .then(() => //alert('copied')
   Swal.fire( 'Copied!', 'Copied to clipboard!', 'success' )) .catch(error =>
   console.log(error)) }
+
+
+  QRCode.toCanvas(document.getElementById('canvas'), '{{url.url}}', function (error) {
+    if (error) console.error(error)
+    console.log('success!');
+  })
+
 </script>

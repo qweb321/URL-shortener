@@ -13,7 +13,8 @@ app.set("view engine", "hbs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/images", express.static("images"));
 app.use("/public", express.static("public"));
-app.use(express.static("node_modules/sweetalert2"));
+app.use("/sweetalert2", express.static("node_modules/sweetalert2"));
+app.use("/qrcode", express.static("node_modules/qrcode"));
 
 app.get("/", (req, res) => {
   const image = { src: "images/link-icon.png" };
@@ -35,11 +36,15 @@ app.post("/", (req, res) => {
     .lean()
     .then((url) => {
       if (!url) {
-        Url.insertMany({ urlID: shortenId, url: req.body.url }).then(() =>
-          res.render("shorten", { url, shortenId, image })
-        );
+        Url.insertMany({ urlID: shortenId, url: req.body.url }).then(() => {
+          res.render("shorten", { url, shortenId, image });
+        });
       } else {
-        res.render("shorten", { url, shortenId: url.urlID, image });
+        res.render("shorten", {
+          url,
+          shortenId: url.urlID,
+          image,
+        });
       }
     });
 });
