@@ -5,6 +5,7 @@ This project provide user can shorten the URL that too much long.
 ## Table of contents
 
 - [Overview](#Overview)
+- [Screenshot](#Screenshot)
 - [Installation](#Installation)
 - [Built with](#built-with)
 - [Author](#author)
@@ -16,6 +17,10 @@ Users should be able to:
 - Input the URL you want to shorten
 - Click the button to shorten
 - Get the URL after shortening
+
+## Screenshot
+
+![Screenshot](images/screenshot.png)
 
 ## Installation
 
