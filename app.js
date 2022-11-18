@@ -24,25 +24,26 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
   const image = { src: "images/link-icon.png" };
   let shortenId = shortenID();
-  //check shortenID exist or not
-  Url.findOne({ urlID: shortenId }).then((id) => {
-    if (id) {
-      // if shortenId alreddy exist in database, create new one
-      shortenId = shortenID();
-    }
-  });
   // check url exist or not
   Url.findOne({ url: req.body.url })
     .lean()
     .then((url) => {
       if (!url) {
-        Url.insertMany({ urlID: shortenId, url: req.body.url }).then(() => {
+        // //check shortenID exist or not
+        Url.findOne({ shortenID: shortenId }).then((id) => {
+          console.log("check shortenId");
+          if (id) {
+            // if shortenId alreddy exist in database, create new one
+            shortenId = shortenID();
+          }
+        });
+        Url.create({ shortenID: shortenId, url: req.body.url }).then(() => {
           res.render("shorten", { url, shortenId, image });
         });
       } else {
         res.render("shorten", {
           url,
-          shortenId: url.urlID,
+          shortenId: url.shortenID,
           image,
         });
       }
@@ -51,7 +52,7 @@ app.post("/", (req, res) => {
 
 app.get("/:id", (req, res) => {
   const id = req.params.id;
-  Url.findOne({ urlID: id })
+  Url.findOne({ shortenID: id })
     .lean()
     .then((url) => {
       res.redirect(url.url);
