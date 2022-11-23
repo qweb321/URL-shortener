@@ -1,4 +1,4 @@
-# Restaurant List
+# URL Shortener
 
 This project provide user can shorten the URL that too much long.
 
